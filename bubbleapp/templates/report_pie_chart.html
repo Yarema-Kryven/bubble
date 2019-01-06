@@ -1,0 +1,92 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1>Звіт по категоріях</h1><br>
+<h2>Період: {{ period }}</h2>
+<hr>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+<div id="container1" style="width: 30%; float: left;padding: 20px;background-color: ghostwhite">
+  <table class="table table-hover table-striped table-bordered table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>Категорія</th>
+        <th>Сума</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for category in sum_by_categories %}
+      <tr>
+        <td>{{ category.trans__name }}</td>
+        <td>{{ category.money__sum|floatformat:2 }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th style="text-align: center;font-weight: bold;font-style: italic">Всього:</th>
+        <th> {{ sum.money|floatformat:2 }} </th>
+      </tr>
+    </tfoot>
+  </table>
+  </div>
+
+<div id="container" style="width: 30%; margin: 0; float: left">
+
+<script type="text/javascript">
+/*context={'dates':dates,'values_by_day':values_by_day,'operation_type1':operation_type,'period':period,
+             'category':category,'chart_categories_names':chart_categories_names,
+             'chart_categories_values':chart_categories_values}*/
+var t1 = "{{ operation_type1 }}";
+var t2 = "{{ chart_categories_names }}";
+var t3 = "{{ chart_categories_values }}";
+
+var namesList = t2.split(' ');
+var valuesList=t3.split(' ');
+objectsList=[];
+var i;
+for (i=0;i<namesList.length; i++)
+{
+    object={name:namesList[i], y:Number(valuesList[i])};
+    objectsList.push(object);
+}
+
+
+
+Highcharts.chart('container', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: t1
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'частка',
+        colorByPoint: true,
+        data: objectsList
+    }]
+});
+</script>
+</div>
+{% endblock content %}

@@ -1,0 +1,59 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1>Транзакції</h1><br>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+  <table class="table table-hover table-striped table-bordered table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>#</th>
+        <th>Категорія</th>
+        <th>Тип операції</th>
+        <th>Сума</th>
+	    <th>Дата</th>
+	    <th>Опис</th>
+	    <th>Управління</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for transaction in transactions %}
+      <tr>
+        <td>{{ transaction.id }}</td>
+        <td>{{ transaction.name_of_Category }}</td>
+        <td>{{ transaction.get_operation_type_display }}</td>
+        <td>{{ transaction.money }}</td>
+        <td>{{ transaction.date|date:'Y-m-d' }}</td>
+        <td>{{ transaction.about }}</td>
+        <td><a class="btn btn-primary btn-outline-dark btn-light btn-sm"
+               href="{% url 'edit_transaction' transaction.id %}" role="button">C</a>
+        <a class="btn btn-primary btn-outline-dark btn-light btn-sm"
+            role="button" onclick=questionFunction()>D</a></td>
+          <script type="text/javascript">
+              function questionFunction(){
+                  var answer= confirm('ВИ ВПЕВНЕНІ ЩО ХОЧЕТЕ ВИДАЛИТИ ЦЮ ТРАНЗАКЦІЮ?');
+              if (answer) {deletingFunction()}
+              else {hahaFunction()}
+              }
+
+            function deletingFunction() {
+                var person = prompt("For deleting type 'DELETE'", "");
+                if (person == 'DELETE') {
+                window.location.href = '{% url 'delete_transaction' transaction.id %}'
+                }
+                else if (person!=null) {alert('Ти ввів щось не те що було потрібно для видалення цієї категорії.' +
+                    ' Спробуй ще раз.')
+                }
+            }
+
+            function hahaFunction() {
+                alert('Ага! Злякався!\n Молодець...  =)')
+            }
+          </script>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+<a class="btn btn-primary btn-sm" href="new_transaction/" role="button">Додати нову транзакцію</a>
+{% endblock content %}

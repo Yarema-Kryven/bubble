@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Додати нову транзакцію:</h1>
+  <div class="jumbotron jumbotron-fluid">
+  {% if transaction.id %}
+    <form action="{% url 'edit_transaction' transaction.id %}" method='post'>
+  {% else %}
+    <form action="{% url 'new_transaction' %}" method='post'>
+  {% endif %}
+        {% csrf_token %}
+        {{ form.as_p }}
+  {% if transaction.id %}
+    <button name="submit">Змінити транзакцію</button>
+  {% else %}
+    <button name="submit">Додати транзакцію</button>
+  {% endif %}
+    </form>
+  </div>
+{% endblock content %}

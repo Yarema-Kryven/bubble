@@ -1,0 +1,62 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1>Звіт по днях</h1><br>
+<p>Категорія: {{ category }}</p>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript">
+
+var t1 = "{{ period }}";
+var t2 = "{{ dates }}";
+var t3 = "{{ operation_type1 }}";
+var t4 = "{{ values_by_day }}";
+var t5 = "{{ operation_type2 }}";
+var t6 = "{{ values2 }}";
+
+var tagList1 = t4.split(' ');
+moneyList1=[];
+tagList1.forEach(function(item, i, arr)
+{
+    moneyList1.push(Number(item));
+});
+var datesList=t2.split(' ');
+
+
+
+Highcharts.chart('container', {
+  chart: {
+    type: 'line'
+  },
+  title: {
+    text: 'Звіт за період:'
+  },
+  subtitle: {
+    text: t1
+  },
+  xAxis: {
+    categories: datesList
+  },
+  yAxis: {
+    title: {
+      text: 'UAH'
+    }
+  },
+  plotOptions: {
+    line: {
+      dataLabels: {
+        enabled: true
+      },
+      enableMouseTracking: false
+    }
+  },
+  series: [{
+    name: t3,
+    data: moneyList1
+  }]
+});
+</script>
+{% endblock content %}

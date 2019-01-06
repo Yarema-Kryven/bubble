@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Категорії витрат/доходів</h1><br>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+
+  <table class="table table-hover table-striped table-bordered table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>#</th>
+        <th>Назва</th>
+        <th>Опис</th>
+        <th>Управління</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for category in categories %}
+      <tr>
+        <td>{{ category.id }}</td>
+        <td>{{ category }}</td>
+        <td>{{ category.about }}</td>
+        <td><a class="btn btn-primary btn-outline-dark btn-light btn-sm"
+               href="{% url 'edit_category' category.id %}" role="button">C</a>
+
+            <a class="btn btn-primary btn-outline-dark btn-light btn-sm"
+            role="button" onclick=questionFunction()>D</a></td>
+          <script type="text/javascript">
+              function questionFunction(){
+                  var answer= confirm('ВИ ВПЕВНЕНІ ЩО ХОЧЕТЕ ВИДАЛИТИ ЦЮ КАТЕГОРІЮ?\nТранзакції здійснені по цій' +
+                  ' категорії залишаться, проте будуть позначені як \'Без Категорії\'. Якщо ви не знатимете' +
+                  ' що далі із ними робити, то люди ненавидітимуть вас, а сім’я та друзі зневажатимуть.');
+              if (answer) {deletingFunction()}
+              else {hahaFunction()}
+              }
+
+            function deletingFunction() {
+                var person = prompt("For deleting type 'DELETE'", "");
+                if (person == 'DELETE') {
+                window.location.href = '{% url 'delete_category' category.id %}'
+                }
+                else if (person!=null) {alert('Ти ввів щось не те що тебе просили для видалення цієї категорії.' +
+                    ' Спробуй ще раз.')
+                }
+            }
+
+            function hahaFunction() {
+                alert('Ага! Злякався!\n Молодець...  =)')
+            }
+          </script>
+
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+<a class="btn btn-primary btn-sm" href="new_category/" role="button">Додати нову категорію</a>
+{% endblock content %}
