@@ -35,12 +35,14 @@ def new_category(request):
     return render(request, 'new_category.html', context)
 
 
-def edit_category(request,category_id):
+def edit_category(request,category_id,clean=False):
     #Editing existing category
     category = Category.objects.get(id=category_id)
     if request.method != 'POST':
         # Початковий запит. Форма заповнюється наявними даними.
         form = CategoryForm(instance=category)
+    elif 'reset' in request.POST or clean:
+        form = CategoryForm()
     else:
         # Відправка даних POST. Обробити дані.
         form = CategoryForm(instance=category,data=request.POST)
@@ -109,7 +111,7 @@ def about(request):
 def report(request):
     #Form with report
     if request.method != 'POST' or ('reset' in request.POST):
-        # Дані не відправлялися, створюється нова формв
+        # Дані не відправлялися, створюється нова форма
         form = ReportForm()
     else:
         # Відправлені дані POST: обробити дані
@@ -127,7 +129,6 @@ def report(request):
 
 def display_meta(request):
     values = request.META.items()
-
     html = []
     for k, v in values:
         html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, v))

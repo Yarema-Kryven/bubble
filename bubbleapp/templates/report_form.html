@@ -5,12 +5,14 @@
     <form action="{% url 'report_form' %}" method='post'>
         {% csrf_token %}
         {{ form.as_p }}
-    <button name="by date">По датах</button>
+    <button style="margin-left: 10px" name="by date">По датах</button>
     <button name="graph">Графік</button>
     <button name="reset">Очистити</button>
     </form>
+  <button style="margin: 10px" onclick=goTrans()>Транзакції</button>
+
   </div>
     <script>
-
+    function goTrans() {window.location.href='{% url 'transactions' %}'}
     </script>
 {% endblock content %}

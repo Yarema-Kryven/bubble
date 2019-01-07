@@ -3,6 +3,14 @@
 <h1>Транзакції</h1><br>
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
+  <button onclick="goNewTrans()">Додати нову транзакцію</button>
+  <button onclick="goReportForm()">Генератор звітів</button>
+  <button onclick="goCat()">Категорії</button>
+  <script>
+      function goNewTrans() {window.location.href='{% url 'new_transaction' %}'}
+      function goReportForm() {window.location.href='{% url 'report_form' %}'}
+      function goCat() {window.location.href='{% url 'categories' %}'}
+  </script>
   <table class="table table-hover table-striped table-bordered table-sm">
     <thead class="thead-light">
       <tr>
@@ -31,29 +39,22 @@
           <script type="text/javascript">
               function questionFunction(){
                   var answer= confirm('ВИ ВПЕВНЕНІ ЩО ХОЧЕТЕ ВИДАЛИТИ ЦЮ ТРАНЗАКЦІЮ?');
-              if (answer) {deletingFunction()}
-              else {hahaFunction()}
-              }
+              if (answer) {deletingFunction()}}
 
             function deletingFunction() {
                 var person = prompt("For deleting type 'DELETE'", "");
                 if (person == 'DELETE') {
                 window.location.href = '{% url 'delete_transaction' transaction.id %}'
                 }
-                else if (person!=null) {alert('Ти ввів щось не те що було потрібно для видалення цієї категорії.' +
+                else if (person!=null) {alert('Ти ввів щось не те що було потрібно для видалення цієї транзакції.' +
                     ' Спробуй ще раз.')
                 }
-            }
-
-            function hahaFunction() {
-                alert('Ага! Злякався!\n Молодець...  =)')
             }
           </script>
       </tr>
     {% endfor %}
     </tbody>
   </table>
-  </div>
 </div>
-<a class="btn btn-primary btn-sm" href="new_transaction/" role="button">Додати нову транзакцію</a>
+</div>
 {% endblock content %}

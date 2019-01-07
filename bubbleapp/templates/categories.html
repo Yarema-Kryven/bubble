@@ -52,7 +52,12 @@
     {% endfor %}
     </tbody>
   </table>
+  <button onclick="goNewCat()">Додати нову категорію</button>
+  <button onclick="goTrans()">Транзакції</button>
+  <script>
+      function goNewCat() {window.location.href={% url 'new_category' %}}
+      function goTrans() {window.location.href={% url 'transactions' %}}
+  </script>
   </div>
 </div>
-<a class="btn btn-primary btn-sm" href="new_category/" role="button">Додати нову категорію</a>
 {% endblock content %}

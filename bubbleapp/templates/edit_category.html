@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
+    <div class="jumbotron jumbotron-fluid">
     <p>Edit entry:</p>
     <form action="{% url 'edit_category' category.id %}" method='post'>
         {% csrf_token %}
         {{ form.as_p }}
-        <button name="submit">save changes</button>
+        <button name="submit">Зберегти</button>
+        <button name="reset" >Очистити</button>
+        <button name="cansel" onclick=goBack()>Відміна</button>
+        <script>
+            function goBack() {window.location.href={%url 'categories' %};}
+        </script>
     </form>
+
+    </div>
+
 {% endblock content %}
