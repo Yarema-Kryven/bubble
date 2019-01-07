@@ -20,7 +20,7 @@
         <td>{{ category }}</td>
         <td>{{ category.about }}</td>
         <td><a class="btn btn-primary btn-outline-dark btn-light btn-sm"
-               href="{% url 'edit_category' category.id %}" role="button">C</a>
+               href="{% url 'bubbleapp:edit_category' category.id %}" role="button">C</a>
 
             <a class="btn btn-primary btn-outline-dark btn-light btn-sm"
             role="button" onclick=questionFunction()>D</a></td>
@@ -36,7 +36,7 @@
             function deletingFunction() {
                 var person = prompt("For deleting type 'DELETE'", "");
                 if (person == 'DELETE') {
-                window.location.href = '{% url 'delete_category' category.id %}'
+                window.location.href = '{% url 'bubbleapp:delete_category' category.id %}'
                 }
                 else if (person!=null) {alert('Ти ввів щось не те що тебе просили для видалення цієї категорії.' +
                     ' Спробуй ще раз.')
@@ -55,8 +55,8 @@
   <button onclick="goNewCat()">Додати нову категорію</button>
   <button onclick="goTrans()">Транзакції</button>
   <script>
-      function goNewCat() {window.location.href={% url 'new_category' %}}
-      function goTrans() {window.location.href={% url 'transactions' %}}
+      function goNewCat() {window.location.href={% url 'bubbleapp:new_category' %}}
+      function goTrans() {window.location.href={% url 'bubbleapp:transactions' %}}
   </script>
   </div>
 </div>

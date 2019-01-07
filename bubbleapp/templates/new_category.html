@@ -2,14 +2,14 @@
 {% block content %}
   <div class="jumbotron jumbotron-fluid">
     <h1>Додати нову категорію:</h1>
-    <form action="{% url 'new_category' %}" method='post'>
+    <form action="{% url 'bubbleapp:new_category' %}" method='post'>
         {% csrf_token %}
         {{ form.as_p }}
         <button style="float: left;margin-right: 10px;margin-left: 10px"  name="submit">Додати категорію</button>
     </form>
   <button onclick=goCat()>Категорії</button>
   <script>
-      function goCat() {window.location.href='{% url 'categories' %}'}
+      function goCat() {window.location.href='{% url 'bubbleapp:categories' %}'}
   </script>
   </div>
 {% endblock content %}

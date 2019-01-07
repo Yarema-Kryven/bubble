@@ -3,17 +3,21 @@
 <h1>Додати нову транзакцію:</h1>
   <div class="jumbotron jumbotron-fluid">
   {% if transaction.id %}
-    <form action="{% url 'edit_transaction' transaction.id %}" method='post'>
+    <form action="{% url 'bubbleapp:edit_transaction' transaction.id %}" method='post'>
   {% else %}
-    <form action="{% url 'new_transaction' %}" method='post'>
+    <form action="{% url 'bubbleapp:new_transaction' %}" method='post'>
   {% endif %}
         {% csrf_token %}
         {{ form.as_p }}
   {% if transaction.id %}
-    <button name="submit">Змінити транзакцію</button>
+    <button style="float: left;margin-right: 10px;margin-left: 10px" name="submit">Змінити транзакцію</button>
   {% else %}
-    <button name="submit">Додати транзакцію</button>
+    <button style="float: left;margin-right: 10px;margin-left: 10px" name="submit">Додати транзакцію</button>
   {% endif %}
     </form>
+  <button onclick=goTrans()>Транзакції</button>
+  <script>
+      function goTrans() {window.location.href='{% url 'bubbleapp:transactions' %}'}
+  </script>
   </div>
 {% endblock content %}

@@ -30,7 +30,7 @@ def new_category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('categories'))
+            return HttpResponseRedirect(reverse('bubbleapp:categories'))
     context = {'form': form}
     return render(request, 'new_category.html', context)
 
@@ -48,7 +48,7 @@ def edit_category(request,category_id,clean=False):
         form = CategoryForm(instance=category,data=request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('categories'))
+            return HttpResponseRedirect(reverse('bubbleapp:categories'))
     context = {'category': category,'form': form}
     return render(request, 'edit_category.html', context)
 
@@ -56,7 +56,7 @@ def edit_category(request,category_id,clean=False):
 def delete_category(request,category_id):
     # Deleting existing category
     Category.objects.filter(id=category_id).delete()
-    return HttpResponseRedirect(reverse('categories'))
+    return HttpResponseRedirect(reverse('bubbleapp:categories'))
 
 
 def transactions(request):
@@ -78,7 +78,7 @@ def new_transaction(request,transaction_id=0):
             form = TransactionForm(instance=transaction, data=request.POST)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect(reverse('transactions'))
+                return HttpResponseRedirect(reverse('bubbleapp:transactions'))
         context = {'transaction': transaction, 'form': form}
         return render(request, 'new_transaction.html', context)
     else:
@@ -90,7 +90,7 @@ def new_transaction(request,transaction_id=0):
             form = TransactionForm(request.POST)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect(reverse('transactions'))
+                return HttpResponseRedirect(reverse('bubbleapp:transactions'))
         context = {'form': form}
         return render(request, 'new_transaction.html', context)
 
@@ -98,7 +98,7 @@ def new_transaction(request,transaction_id=0):
 def delete_transaction(request,transaction_id):
     # Deleting existing transaction
     Transaction.objects.filter(id=transaction_id).delete()
-    return HttpResponseRedirect(reverse('transactions'))
+    return HttpResponseRedirect(reverse('bubbleapp:transactions'))
 
 
 def about(request):

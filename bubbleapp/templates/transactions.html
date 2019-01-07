@@ -1,15 +1,15 @@
 ﻿{% extends "base.html" %}
 {% block content %}
 <h1>Транзакції</h1><br>
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid" style="padding: 1rem">
   <div class="container">
   <button onclick="goNewTrans()">Додати нову транзакцію</button>
   <button onclick="goReportForm()">Генератор звітів</button>
   <button onclick="goCat()">Категорії</button>
   <script>
-      function goNewTrans() {window.location.href='{% url 'new_transaction' %}'}
-      function goReportForm() {window.location.href='{% url 'report_form' %}'}
-      function goCat() {window.location.href='{% url 'categories' %}'}
+      function goNewTrans() {window.location.href='{% url 'bubbleapp:new_transaction' %}'}
+      function goReportForm() {window.location.href='{% url 'bubbleapp:report_form' %}'}
+      function goCat() {window.location.href='{% url 'bubbleapp:categories' %}'}
   </script>
   <table class="table table-hover table-striped table-bordered table-sm">
     <thead class="thead-light">
@@ -33,7 +33,7 @@
         <td>{{ transaction.date|date:'Y-m-d' }}</td>
         <td>{{ transaction.about }}</td>
         <td><a class="btn btn-primary btn-outline-dark btn-light btn-sm"
-               href="{% url 'edit_transaction' transaction.id %}" role="button">C</a>
+               href="{% url 'bubbleapp:edit_transaction' transaction.id %}" role="button">C</a>
         <a class="btn btn-primary btn-outline-dark btn-light btn-sm"
             role="button" onclick=questionFunction()>D</a></td>
           <script type="text/javascript">
@@ -44,7 +44,7 @@
             function deletingFunction() {
                 var person = prompt("For deleting type 'DELETE'", "");
                 if (person == 'DELETE') {
-                window.location.href = '{% url 'delete_transaction' transaction.id %}'
+                window.location.href = '{% url 'bubbleapp:delete_transaction' transaction.id %}'
                 }
                 else if (person!=null) {alert('Ти ввів щось не те що було потрібно для видалення цієї транзакції.' +
                     ' Спробуй ще раз.')

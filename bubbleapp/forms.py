@@ -16,6 +16,7 @@ class TransactionForm(forms.ModelForm):
         labels={'trans':'Категорія','operation_type':'Тип операції',
                 'money':'Сума','date':'Дата','about':'Опис'}
 
+
 class ReportForm(forms.Form):
     t=Transaction
     date1=forms.DateField(label='Початкова дата',initial=datetime.date.today)

@@ -2,7 +2,7 @@
 {% block content %}
     <h1>Генератор звітів:</h1>
   <div class="jumbotron jumbotron-fluid">
-    <form action="{% url 'report_form' %}" method='post'>
+    <form action="{% url 'bubbleapp:report_form' %}" method='post'>
         {% csrf_token %}
         {{ form.as_p }}
     <button style="margin-left: 10px" name="by date">По датах</button>
@@ -13,6 +13,6 @@
 
   </div>
     <script>
-    function goTrans() {window.location.href='{% url 'transactions' %}'}
+    function goTrans() {window.location.href='{% url 'bubbleapp:transactions' %}'}
     </script>
 {% endblock content %}
