@@ -3,6 +3,7 @@ from .models import Category,Subcategory,Transaction
 from .forms import CategoryForm,TransactionForm,ReportForm
 from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 # Create your views here.
 
@@ -13,6 +14,7 @@ def index(request):
     return render(request,'index.html',context)
 
 
+@login_required
 def categories(request):
     #Page with categories
     categories=Category.objects.order_by('name')
@@ -20,6 +22,7 @@ def categories(request):
     return render(request, 'categories.html',context)
 
 
+@login_required
 def new_category(request):
     #Adding of new category
     if request.method != 'POST':
@@ -35,6 +38,7 @@ def new_category(request):
     return render(request, 'new_category.html', context)
 
 
+@login_required
 def edit_category(request,category_id,clean=False):
     #Editing existing category
     category = Category.objects.get(id=category_id)
@@ -53,12 +57,14 @@ def edit_category(request,category_id,clean=False):
     return render(request, 'edit_category.html', context)
 
 
+@login_required
 def delete_category(request,category_id):
     # Deleting existing category
     Category.objects.filter(id=category_id).delete()
     return HttpResponseRedirect(reverse('bubbleapp:categories'))
 
 
+@login_required
 def transactions(request):
     #Shows transactions
     transactions=Transaction.objects.order_by('-date')
@@ -66,6 +72,7 @@ def transactions(request):
     return render(request, 'transactions.html',context)
 
 
+@login_required
 def new_transaction(request,transaction_id=0):
     #Adds/changes new transaction
     if transaction_id:
@@ -95,6 +102,7 @@ def new_transaction(request,transaction_id=0):
         return render(request, 'new_transaction.html', context)
 
 
+@login_required
 def delete_transaction(request,transaction_id):
     # Deleting existing transaction
     Transaction.objects.filter(id=transaction_id).delete()
@@ -105,9 +113,10 @@ def about(request):
     #Shows page with information about site
     form=ReportForm()
     context={'form':form}
-    return render(request,'contact_form.html',context)
+    return render(request,'about.html',context)
 
 
+@login_required
 def report(request):
     #Form with report
     if request.method != 'POST' or ('reset' in request.POST):
