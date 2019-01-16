@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     #'bubbleapp.apps.BubbleappConfig',
     'bubbleapp',
     'users',
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [

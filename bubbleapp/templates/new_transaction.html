@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
+        {% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+    {{ form.media }}
 <h1>Додати нову транзакцію:</h1>
-  <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid" style="margin: 50px">
+  <div class="row">
+    <div class="col-8">
   {% if transaction.id %}
     <form action="{% url 'bubbleapp:edit_transaction' transaction.id %}" method='post'>
   {% else %}
     <form action="{% url 'bubbleapp:new_transaction' %}" method='post'>
   {% endif %}
         {% csrf_token %}
-        {{ form.as_p }}
+  {% bootstrap_form form layout='horizontal' %}
+
   {% if transaction.id %}
     <button style="float: left;margin-right: 10px;margin-left: 10px" name="submit">Змінити транзакцію</button>
   {% else %}
@@ -20,4 +27,6 @@
       function goTrans() {window.location.href='{% url 'bubbleapp:transactions' %}'}
   </script>
   </div>
+  </div>
+    </div>
 {% endblock content %}

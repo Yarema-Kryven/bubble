@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from .models import Category,Subcategory,Transaction
 from .forms import CategoryForm,TransactionForm,ReportForm
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect,HttpResponse,Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 # Create your views here.
+
 
 
 def index(request):
@@ -17,7 +18,8 @@ def index(request):
 @login_required
 def categories(request):
     #Page with categories
-    categories=Category.objects.order_by('name')
+    # categories=Category.objects.filter(owner=request.user).order_by('name')
+    categories = Category.objects.filter(user=request.user).order_by('name')
     context={'categories':categories}
     return render(request, 'categories.html',context)
 
@@ -32,20 +34,25 @@ def new_category(request):
         # Відправлені дані POST: обробити дані
         form = CategoryForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_category=form.save(commit=False)
+            new_category.user=request.user
+            new_category.save()
             return HttpResponseRedirect(reverse('bubbleapp:categories'))
     context = {'form': form}
     return render(request, 'new_category.html', context)
 
 
 @login_required
-def edit_category(request,category_id,clean=False):
+def edit_category(request,category_id):
     #Editing existing category
     category = Category.objects.get(id=category_id)
+    if category.user != request.user:
+        raise Http404
+
     if request.method != 'POST':
         # Початковий запит. Форма заповнюється наявними даними.
         form = CategoryForm(instance=category)
-    elif 'reset' in request.POST or clean:
+    elif 'reset' in request.POST:
         form = CategoryForm()
     else:
         # Відправка даних POST. Обробити дані.
@@ -60,14 +67,17 @@ def edit_category(request,category_id,clean=False):
 @login_required
 def delete_category(request,category_id):
     # Deleting existing category
-    Category.objects.filter(id=category_id).delete()
+    category = Category.objects.get(id=category_id)
+    if category.owner != request.user:
+        raise Http404
+    Category.objects.filter(id=category_id,owner=request.user).delete()
     return HttpResponseRedirect(reverse('bubbleapp:categories'))
 
 
 @login_required
 def transactions(request):
     #Shows transactions
-    transactions=Transaction.objects.order_by('-date')
+    transactions=Transaction.objects.filter(user=request.user).order_by('-date')
     context={'transactions':transactions}
     return render(request, 'transactions.html',context)
 
@@ -77,26 +87,32 @@ def new_transaction(request,transaction_id=0):
     #Adds/changes new transaction
     if transaction_id:
         transaction = Transaction.objects.get(id=transaction_id)
+        if transaction.user != request.user:
+            raise Http404
         if request.method != 'POST':
             # Початковий запит. Форма заповнюється наявними даними.
-            form = TransactionForm(instance=transaction)
+            form = TransactionForm(instance=transaction,user=request.user)
         else:
             # Відправка даних POST. Обробити дані.
-            form = TransactionForm(instance=transaction, data=request.POST)
+            form = TransactionForm(instance=transaction, data=request.POST,user=request.user)
             if form.is_valid():
-                form.save()
+                new_transaction=form.save(commit=False)
+                new_transaction.user = request.user
+                new_transaction.save()
                 return HttpResponseRedirect(reverse('bubbleapp:transactions'))
         context = {'transaction': transaction, 'form': form}
         return render(request, 'new_transaction.html', context)
     else:
         if request.method != 'POST':
             # Дані не відправлялися, створюється нова формв
-            form = TransactionForm()
+            form = TransactionForm(user=request.user)
         else:
             # Відправлені дані POST: обробити дані
-            form = TransactionForm(request.POST)
+            form = TransactionForm(request.POST,user=request.user)
             if form.is_valid():
-                form.save()
+                new_transaction = form.save(commit=False)
+                new_transaction.user = request.user
+                new_transaction.save()
                 return HttpResponseRedirect(reverse('bubbleapp:transactions'))
         context = {'form': form}
         return render(request, 'new_transaction.html', context)
@@ -105,6 +121,9 @@ def new_transaction(request,transaction_id=0):
 @login_required
 def delete_transaction(request,transaction_id):
     # Deleting existing transaction
+    transaction = Transaction.objects.get(id=transaction_id)
+    if transaction.user != request.user:
+        raise Http404
     Transaction.objects.filter(id=transaction_id).delete()
     return HttpResponseRedirect(reverse('bubbleapp:transactions'))
 
@@ -121,12 +140,12 @@ def report(request):
     #Form with report
     if request.method != 'POST' or ('reset' in request.POST):
         # Дані не відправлялися, створюється нова форма
-        form = ReportForm()
+        form = ReportForm(user=request.user)
     else:
         # Відправлені дані POST: обробити дані
-        form = ReportForm(request.POST)
+        form = ReportForm(request.POST,user=request.user)
         if form.is_valid():
-            context = graph_parameters(form.cleaned_data)
+            context = graph_parameters(request,form.cleaned_data)
             if 'by date' in request.POST:
                 return render(request, 'report_line_chart.html', context)
             else: #if 'graph' in request.POST
@@ -144,13 +163,13 @@ def display_meta(request):
     return HttpResponse('<table>%s</table>' % '\n'.join(html))
 
 
-def graph_parameters(params):
+def graph_parameters(request,params):
     #Takes parameters in request.POST and returns data for Line and Pie Charts
     dates = []
     values_by_day = []
     chart_categories_names=[]
     chart_categories_values=[]
-    results=Transaction.objects.filter(date__gte=params['date1'])\
+    results=Transaction.objects.filter(user=request.user).filter(date__gte=params['date1'])\
         .filter(date__lte=params['date2'])
     if params['operation_type']:
         results=results.filter(operation_type__exact=params['operation_type'])

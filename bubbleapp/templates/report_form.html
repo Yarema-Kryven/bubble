@@ -1,14 +1,21 @@
 ﻿{% extends "base.html" %}
 {% block content %}
+    {% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+    {{ form.media }}
     <h1>Генератор звітів:</h1>
   <div class="jumbotron jumbotron-fluid">
+  <div class="col-sm-6">
     <form action="{% url 'bubbleapp:report_form' %}" method='post'>
         {% csrf_token %}
-        {{ form.as_p }}
+        {% bootstrap_form form layout='horizontal' %}
+
     <button style="margin-left: 10px" name="by date">По датах</button>
     <button name="graph">Графік</button>
     <button name="reset">Очистити</button>
     </form>
+   </div>
   <button style="margin: 10px" onclick=goTrans()>Транзакції</button>
 
   </div>

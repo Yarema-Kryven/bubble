@@ -7,4 +7,7 @@ urlpatterns = [
     url(r'^login/$',login,name='login'),
     #Сторінка виходу
     url(r'^logout/$', views.logout_view, name='logout'),
+    #Сторінка реєстрації
+    url(r'^register/$', views.register, name='register'),
+
 ]

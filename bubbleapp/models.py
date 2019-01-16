@@ -1,9 +1,14 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
+
 class Category(models.Model):
     name=models.CharField(max_length=30)
     about=models.CharField(max_length=100)
+    user=models.ForeignKey('auth.User',on_delete=models.CASCADE)
+
     class Meta():
         verbose_name_plural = 'categories'
     def __str__(self):
@@ -30,6 +35,7 @@ class Transaction(models.Model):
     money=models.DecimalField(max_digits=6,decimal_places=2,default=0.00)
     date=models.DateField()
     about = models.CharField(max_length=100)
+    user=models.ForeignKey('auth.User',on_delete=models.CASCADE)
 
     class Meta():
         verbose_name_plural = 'transactions'
@@ -44,8 +50,11 @@ class Transaction(models.Model):
     def __str__(self):
             return self.about
 
+
     def __add__(self, other):
         if self.operation_type==1:
             return -self.money
         else:
             return self.money
+
+
